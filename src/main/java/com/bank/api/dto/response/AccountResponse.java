@@ -1,6 +1,7 @@
 package com.bank.api.dto.response;
 
 import com.bank.account.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -25,7 +26,7 @@ public record AccountResponse(UUID accountID,
      * @param account the account being referenced
      * @return returns a switch on the specific account subclass
      */
-    public static AccountResponse fromAccount(Account account) {
+    public static @NotNull AccountResponse fromAccount(@NotNull Account account) {
         return switch (account) {
             case CheckingAccount cAccount -> new AccountResponse(account.getAccountID(),
                     account.getUserID(), account.getAccountType(),
