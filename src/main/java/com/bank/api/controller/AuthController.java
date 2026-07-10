@@ -11,6 +11,7 @@ import com.bank.auth.jwt.RequestContext;
 import com.bank.exception.BankingException;
 import com.bank.user.User;
 import io.javalin.http.Context;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -31,7 +32,7 @@ public class AuthController {
      * method signature and also because other parts of the codebase will rely
      * on these methods
      */
-    public void register(Context ctx) throws BankingException {
+    public void register(@NotNull Context ctx) throws BankingException {
         RegisterRequest rReq = ctx.bodyAsClass(RegisterRequest.class);
         User user = authService.registerUser(rReq.username(), rReq.firstName(),
                 rReq.lastName(), rReq.middleInitial(), rReq.password(), rReq.role());
@@ -46,7 +47,7 @@ public class AuthController {
      * method signature and also because other parts of the codebase will rely
      * on these methods
      */
-    public void login(Context ctx) throws BankingException {
+    public void login(@NotNull Context ctx) throws BankingException {
         LoginRequest lReq = ctx.bodyAsClass(LoginRequest.class);
         User user = authService.login(lReq.username(), lReq.password());
         String token = jwtService.generateToken(user);
