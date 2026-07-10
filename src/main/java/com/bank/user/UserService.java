@@ -39,7 +39,7 @@ public class UserService {
         return userRepository.findAllUsers();
     }
 
-    private User requireUserExists(UUID userId) throws UserNotFoundException {
+    private @NotNull User requireUserExists(UUID userId) throws UserNotFoundException {
         return userRepository.findUserById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
     }
