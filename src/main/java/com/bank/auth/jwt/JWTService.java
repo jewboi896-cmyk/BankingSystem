@@ -5,6 +5,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.bank.user.User;
+import org.jetbrains.annotations.NotNull;
+
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
@@ -22,7 +24,7 @@ public class JWTService {
      * @param user the user that requests the token to be generated
      * @return returns a signed JWT token that expires after 15 minutes
      */
-    public String generateToken(User user) {
+    public String generateToken(@NotNull User user) {
         return JWT.create()
                 .withSubject(user.getUserID().toString())
                 .withClaim("role", user.getRole().name())
