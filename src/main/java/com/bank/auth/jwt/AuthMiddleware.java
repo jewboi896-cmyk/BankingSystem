@@ -6,6 +6,7 @@ import com.bank.exception.UnauthorizedException;
 import com.bank.role.Role;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -25,7 +26,7 @@ public class AuthMiddleware implements Handler {
      * @throws UnauthorizedException throws if token isnt authorized
      */
     @Override
-    public void handle(Context ctx) throws UnauthorizedException {
+    public void handle(@NotNull Context ctx) throws UnauthorizedException {
         String authHeader = ctx.header("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             throw new UnauthorizedException("Missing or malformed Authorization header");
