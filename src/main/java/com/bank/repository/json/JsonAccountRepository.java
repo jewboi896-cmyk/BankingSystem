@@ -12,7 +12,7 @@ public class JsonAccountRepository implements AccountRepository {
     private final FileHelper<Account> fileHelper;
     private final Map<UUID, Account> accounts;
 
-    public JsonAccountRepository(FileHelper<Account> fileHelper) {
+    public JsonAccountRepository(@NotNull FileHelper<Account> fileHelper) {
         this.fileHelper = fileHelper;
         this.accounts = fileHelper.loadFromFile();
     }
@@ -52,6 +52,10 @@ public class JsonAccountRepository implements AccountRepository {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * @author Derek Homel
+     * @return
+     */
     @Override
     public List<Account> findAllAccounts() {
         return new ArrayList<>(accounts.values());

@@ -12,14 +12,13 @@ public class JsonUserRepository implements UserRepository {
     private final Map<String, User> usersByUsername;
     private final FileHelper<User> fileHelper;
 
-    public JsonUserRepository(FileHelper<User> fileHelper) {
+    public JsonUserRepository(@NotNull FileHelper<User> fileHelper) {
         this.fileHelper = fileHelper;
         this.usersById = fileHelper.loadFromFile();
         this.usersByUsername = buildUsernameIndex();
     }
 
-    @NotNull
-    private Map<String, User> buildUsernameIndex() {
+    private @NotNull Map<String, User> buildUsernameIndex() {
         Map<String, User> index = new HashMap<>();
         for (User user : usersById.values()) {
             index.put(user.getUsername(), user);
@@ -34,13 +33,13 @@ public class JsonUserRepository implements UserRepository {
         fileHelper.writeToFile(usersById);
     }
 
-    @Override @NotNull
-    public Optional<User> findUserById(UUID userId) {
+    @Override
+    public @NotNull Optional<User> findUserById(UUID userId) {
         return Optional.ofNullable(usersById.get(userId));
     }
 
-    @Override @NotNull
-    public Optional<User> findUserByUsername(String username) {
+    @Override
+    public @NotNull Optional<User> findUserByUsername(String username) {
         return Optional.ofNullable(usersByUsername.get(username));
     }
 

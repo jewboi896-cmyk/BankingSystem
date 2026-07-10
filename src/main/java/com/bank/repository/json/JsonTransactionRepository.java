@@ -12,7 +12,7 @@ public class JsonTransactionRepository implements TransactionRepository {
     private final Map<UUID, Transaction> transactions;
     private final FileHelper<Transaction> fileHelper;
 
-    public JsonTransactionRepository(FileHelper<Transaction> fileHelper) {
+    public JsonTransactionRepository(@NotNull FileHelper<Transaction> fileHelper) {
         this.fileHelper = fileHelper;
         this.transactions = fileHelper.loadFromFile();
     }
