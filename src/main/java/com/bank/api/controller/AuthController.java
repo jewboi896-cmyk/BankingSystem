@@ -17,6 +17,7 @@ import java.util.UUID;
 public class AuthController {
     AuthService authService;
     JWTService jwtService;
+    private final int expiryTimeInSeconds = 900;
 
     public AuthController(AuthService authService, JWTService jwtService) {
         this.authService = authService;
@@ -50,7 +51,7 @@ public class AuthController {
         User user = authService.login(lReq.username(), lReq.password());
         String token = jwtService.generateToken(user);
         ctx.json(new LoginResponse(token, user.getUserID(),
-                user.getUsername(), user.getRole(), 900));
+                user.getUsername(), user.getRole(), expiryTimeInSeconds));
     }
 
     /**
