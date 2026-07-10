@@ -22,7 +22,8 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final AccountService accountService;
 
-    public TransactionService(TransactionRepository transactionRepository, AccountService accountService) {
+    public TransactionService(TransactionRepository transactionRepository,
+                              AccountService accountService) {
         this.transactionRepository = transactionRepository;
         this.accountService = accountService;
     }
@@ -35,11 +36,13 @@ public class TransactionService {
     internally sets the status to complete, saves the transaction and the account
     and returns the transaction
      */
-    @NotNull
-    public Transaction depositFunds(UUID accountId, BigDecimal amount, String description) throws BankingException {
+    public @NotNull Transaction depositFunds(UUID accountId, BigDecimal amount,
+                                             String description)
+            throws BankingException {
         Account account = accountService.getAccountByID(accountId);
         account.validateDeposit(amount);
-        Transaction transaction = new Transaction(DEPOSIT, amount, null, accountId, description);
+        Transaction transaction = new Transaction(DEPOSIT, amount,
+                null, accountId, description);
         try {
             accountService.applyDeposit(account, amount);
         } catch (Exception e) {
@@ -60,12 +63,14 @@ public class TransactionService {
     withdrawal limit for that account, sets the status to complete, saves the transaction,
     saves the account, and returns the transaction
      */
-    @NotNull
-    public Transaction withdrawFunds(UUID accountID, BigDecimal amount, String description) throws BankingException {
+    public @NotNull Transaction withdrawFunds(UUID accountID, BigDecimal amount,
+                                              String description)
+            throws BankingException {
         Account account = accountService.getAccountByID(accountID);
 
         account.validateWithdrawal(amount);
-        Transaction transaction = new Transaction(WITHDRAW, amount, accountID, null, description);
+        Transaction transaction = new Transaction(WITHDRAW, amount, accountID,
+                null, description);
         try {
             accountService.applyWithdrawal(account, amount);
         } catch (Exception e) {
@@ -86,13 +91,16 @@ public class TransactionService {
     the account is a savings account it increments the monthly withdrawal limit for that account.
     it then saves both the account(source and destination) and transaction and returns the transaction
      */
-    @NotNull
-    public Transaction transferFunds(UUID sourceID, UUID destinationID, BigDecimal amount, String description) throws BankingException {
+    public @NotNull Transaction transferFunds(UUID sourceID, UUID destinationID,
+                                              BigDecimal amount,
+                                              String description)
+            throws BankingException {
         Account source = accountService.getAccountByID(sourceID);
         Account destination = accountService.getAccountByID(destinationID);
 
         source.validateTransfer(amount, destination);
-        Transaction transaction = new Transaction(TRANSFER, amount, sourceID, destinationID, description);
+        Transaction transaction = new Transaction(TRANSFER, amount, sourceID,
+                destinationID, description);
         try {
             accountService.applyWithdrawal(source, amount);
             accountService.applyDeposit(destination, amount);
@@ -110,8 +118,8 @@ public class TransactionService {
     /*
     method to get a transaction via an account ID
      */
-    @NotNull
-    public Transaction getTransactionByID(UUID transactionID) throws TransactionNotFoundException {
+    public @NotNull Transaction getTransactionByID(UUID transactionID)
+            throws TransactionNotFoundException {
         return transactionRepository.findTransactionById(transactionID)
                 .orElseThrow(() -> new TransactionNotFoundException(transactionID));
     }
@@ -120,8 +128,8 @@ public class TransactionService {
     method to get an accounts full transaction history and throws an accoun not found
     exception if the accountID doesn't exist
      */
-    @NotNull
-    public List<Transaction> getTransactionHistoryForAccount(UUID accountID) throws AccountNotFoundException {
+    public @NotNull List<Transaction> getTransactionHistoryForAccount(
+            UUID accountID) throws AccountNotFoundException {
         accountService.getAccountByID(accountID);   // throws if not found
         return transactionRepository.findTransactionByAccountId(accountID);
     }
