@@ -28,10 +28,11 @@ public class AuthMiddleware implements Handler {
     @Override
     public void handle(@NotNull Context ctx) throws UnauthorizedException {
         String authHeader = ctx.header("Authorization");
+        final int beginIndex = 7;
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             throw new UnauthorizedException("Missing or malformed Authorization header");
         }
-        String token = authHeader.substring(7);  // strip "Bearer "
+        String token = authHeader.substring(beginIndex);  // strip "Bearer "
         try {
             DecodedJWT decoded = jwtService.verifyToken(token);
             ctx.attribute("userID", UUID.fromString(decoded.getSubject()));
