@@ -95,7 +95,8 @@ public final class SavingsAccount extends Account {
         validateAccountActiveAndAmount(amount);
         rolloverIfNeeded();
         if (withdrawalsThisMonth >= monthlyWithdrawalLimit) {
-            throw new WithdrawalLimitExceededException(monthlyWithdrawalLimit, withdrawalsThisMonth);
+            throw new WithdrawalLimitExceededException(monthlyWithdrawalLimit,
+                    withdrawalsThisMonth);
         }
         BigDecimal balance = getAccountBalance();
         if (balance.subtract(amount).compareTo(BigDecimal.ZERO) < 0) {

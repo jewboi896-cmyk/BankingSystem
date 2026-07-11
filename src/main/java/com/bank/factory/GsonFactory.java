@@ -22,8 +22,7 @@ public class GsonFactory {
      * @return returns a GsonBuilder with all the custom adapter classes
      */
     public static @NotNull Gson createGson() {
-        return new GsonBuilder()
-                .setPrettyPrinting()
+        return new GsonBuilder().setPrettyPrinting()
                 .registerTypeAdapter(LocalDateTime.class,
                         new LocalDateTimeAdapter())
                 .registerTypeAdapter(UUID.class, new UUIDAdapter())

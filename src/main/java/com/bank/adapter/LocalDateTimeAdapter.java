@@ -21,8 +21,9 @@ public class LocalDateTimeAdapter implements JsonSerializer<LocalDateTime>,
      * @return returns a JsonPrimitive of a DateTimeFormater as a string
      */
     @Override
-    public @NotNull JsonElement serialize(LocalDateTime src, Type typeOfSrc,
-                                 JsonSerializationContext context) {
+    public @NotNull JsonElement serialize(@NotNull LocalDateTime src,
+                                          Type typeOfSrc,
+                                          JsonSerializationContext context) {
         return new JsonPrimitive(src.format(FORMATTER));
     }
 
@@ -37,8 +38,9 @@ public class LocalDateTimeAdapter implements JsonSerializer<LocalDateTime>,
      * @throws JsonParseException throws if json cannot be parsed
      */
     @Override
-    public @NotNull LocalDateTime deserialize(JsonElement json, Type typeOfT,
-                                     JsonDeserializationContext context)
+    public @NotNull LocalDateTime deserialize(@NotNull JsonElement json,
+                                              Type typeOfT,
+                                              JsonDeserializationContext context)
             throws JsonParseException {
         return LocalDateTime.parse(json.getAsString(), FORMATTER);
     }

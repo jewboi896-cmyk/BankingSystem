@@ -71,8 +71,7 @@ public class AccountService {
      @return List<Account> returns a list of all accounts of all types
      that belong to that userID
      */
-    @NotNull
-    public List<Account> getAllUserAccounts(UUID userID) {
+    public @NotNull List<Account> getAllUserAccounts(UUID userID) {
         return accountRepository.findAccountByUserID(userID);
     }
 
@@ -156,7 +155,7 @@ public class AccountService {
      * @param account account to apply withdrawal from
      * @param amount amount to be withdrawn
      */
-    public void applyWithdrawal(Account account, BigDecimal amount) {
+    public void applyWithdrawal(@NotNull Account account, BigDecimal amount) {
         account.withdrawFunds(amount);
         accountRepository.saveAccount(account);
     }
@@ -166,7 +165,7 @@ public class AccountService {
      * @param account account to apply the deposit to
      * @param amount amount to be deposited
      */
-    public void applyDeposit(Account account, BigDecimal amount) {
+    public void applyDeposit(@NotNull Account account, BigDecimal amount) {
         account.depositFunds(amount);
         accountRepository.saveAccount(account);
     }

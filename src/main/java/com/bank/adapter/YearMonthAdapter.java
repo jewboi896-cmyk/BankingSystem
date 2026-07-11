@@ -21,7 +21,7 @@ public class YearMonthAdapter implements JsonSerializer<YearMonth>,
      * @return returns a JsonPrimitive in the format of "yyyy-MM"
      */
     @Override
-    public @NotNull JsonElement serialize(YearMonth src, Type typeOfSrc,
+    public @NotNull JsonElement serialize(@NotNull YearMonth src, Type typeOfSrc,
                                           JsonSerializationContext context) {
         return new JsonPrimitive(src.format(FORMATTER));
     }
@@ -36,7 +36,7 @@ public class YearMonthAdapter implements JsonSerializer<YearMonth>,
      * @throws JsonParseException throws if the json cannot be parsed correctly
      */
     @Override
-    public @NotNull YearMonth deserialize(JsonElement json, Type typeOfT,
+    public @NotNull YearMonth deserialize(@NotNull JsonElement json, Type typeOfT,
                                           JsonDeserializationContext context)
             throws JsonParseException {
         return YearMonth.parse(json.getAsString(), FORMATTER);

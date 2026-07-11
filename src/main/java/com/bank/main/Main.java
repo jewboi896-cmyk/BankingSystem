@@ -18,9 +18,10 @@ import com.bank.user.UserService;
 import io.javalin.Javalin;
 
 public class Main {
+    private final static int SECRET_LENGTH = 32;
     public static void main(String[] args) {
         String secret = System.getenv("BANK_JWT_SECRET");
-        if ((secret == null) || (secret.length() < 32)) {
+        if ((secret == null) || (secret.length() < SECRET_LENGTH)) {
             System.err.println("FATAL: BANK_JWT_SECRET environment variable must be set " +
                     "and at least 32 characters long.");
             System.exit(1);

@@ -17,7 +17,8 @@ public class AccountController {
     private final AccountService accountService;
     private final AccountOwnershipGuard guard;
 
-    public AccountController(AccountService accountService, AccountOwnershipGuard guard) {
+    public AccountController(AccountService accountService,
+                             AccountOwnershipGuard guard) {
         this.accountService = accountService;
         this.guard = guard;
     }

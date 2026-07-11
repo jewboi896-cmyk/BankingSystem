@@ -25,8 +25,8 @@ public class JsonTransactionRepository implements TransactionRepository {
                 .collect(Collectors.toList());
     }
 
-    @Override @NotNull
-    public Optional<Transaction> findTransactionById(UUID transactionId) {
+    @Override
+    public @NotNull Optional<Transaction> findTransactionById(UUID transactionId) {
         return Optional.ofNullable(transactions.get(transactionId));
     }
 

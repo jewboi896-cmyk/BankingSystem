@@ -91,8 +91,8 @@ public sealed abstract class Account permits CheckingAccount, SavingsAccount {
      * @throws InvalidAmountException throws if the accounts amount is less
      * than or equal to zero
      */
-    protected void validateAccountActiveAndAmount(BigDecimal amount) throws AccountFrozenException,
-            AccountClosedException, InvalidAmountException {
+    protected void validateAccountActiveAndAmount(BigDecimal amount) throws
+            AccountFrozenException, AccountClosedException, InvalidAmountException {
         if (FROZEN == getAccountStatus()) throw new AccountFrozenException(getAccountID());
         if (CLOSED == getAccountStatus()) throw new AccountClosedException(getAccountID());
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) throw new InvalidAmountException(amount);

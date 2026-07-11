@@ -22,7 +22,7 @@ public class AccountAdapter implements JsonSerializer<Account>,
      */
     @Override
     public @NotNull JsonElement serialize(Account src, Type typeOfSrc,
-                                          JsonSerializationContext context) {
+                                          @NotNull JsonSerializationContext context) {
         JsonObject object = context.serialize(src, src.getClass())
                 .getAsJsonObject();
         object.addProperty(TYPE_DISCRIMINATOR, src.getAccountType().name());
@@ -40,7 +40,7 @@ public class AccountAdapter implements JsonSerializer<Account>,
      * @throws JsonParseException throws when a json string cannot be parsed
      */
     @Override
-    public @NotNull Account deserialize(JsonElement json, Type typeOfT,
+    public @NotNull Account deserialize(@NotNull JsonElement json, Type typeOfT,
                                         JsonDeserializationContext context)
             throws JsonParseException {
         JsonObject object = json.getAsJsonObject();
