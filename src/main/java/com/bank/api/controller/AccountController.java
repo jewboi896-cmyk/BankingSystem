@@ -61,12 +61,8 @@ public class AccountController {
      * on these methods
      */
     public void getAccount(Context ctx) throws BankingException {
-        UUID callerID = RequestContext.userID(ctx);
         UUID accountID = UUID.fromString(ctx.pathParam("id"));
-        Account account = accountService.getAccountByID(accountID);
-        if (!account.getUserID().equals(callerID)) {
-            throw new UnauthorizedException("Account does not belong to caller");
-        }
+        Account account = guard.requireOwnedAccount(ctx, accountID);
         ctx.json(AccountResponse.fromAccount(account));
     }
 
