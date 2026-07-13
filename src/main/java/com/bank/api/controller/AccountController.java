@@ -7,7 +7,6 @@ import com.bank.api.dto.request.CreateCheckingRequest;
 import com.bank.api.dto.request.CreateSavingsRequest;
 import com.bank.auth.jwt.RequestContext;
 import com.bank.exception.BankingException;
-import com.bank.exception.UnauthorizedException;
 import io.javalin.http.Context;
 
 import java.util.List;
