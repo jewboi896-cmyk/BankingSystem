@@ -46,7 +46,7 @@ public class RouteConfig {
         config.routes.get("/api/accounts/{id}/transactions", txC::getHistory);
 
         config.routes.before("/api/users/*", auth);
-        config.routes.get("api/users/me", uCont::getUser);
+        config.routes.get("/api/users/me", uCont::getUser);
 
     }
 }
