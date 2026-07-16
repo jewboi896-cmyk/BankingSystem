@@ -4,6 +4,7 @@ import com.bank.exception.*;
 import com.bank.repository.AccountRepository;
 import com.bank.repository.UserRepository;
 import org.jetbrains.annotations.NotNull;
+import com.bank.exception.AccountFrozenException.FrozenOp;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -103,9 +104,13 @@ public class AccountService {
      * @throws CannotCloseAccountException throws if account cannot be closed
      */
     public void closeAccount(UUID accountID) throws AccountNotFoundException,
-            CannotCloseAccountException {
+            CannotCloseAccountException, AccountFrozenException {
         Account account = accountRepository.findAccountByAccountID(accountID)
                 .orElseThrow(() -> new AccountNotFoundException(accountID));
+
+        if (account.getAccountStatus().equals(AccountStatus.FROZEN)) {
+            throw new AccountFrozenException(accountID, FrozenOp.CLOSURE);
+        }
 
         BigDecimal currentBalance = account.getAccountBalance();
         // don't allow an account to close if account balance isnt 0
