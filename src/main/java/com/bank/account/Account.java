@@ -2,6 +2,7 @@ package com.bank.account;
 
 import com.bank.exception.AccountClosedException;
 import com.bank.exception.AccountFrozenException;
+import com.bank.exception.AccountFrozenException.FrozenOp;
 import com.bank.exception.BankingException;
 import com.bank.exception.InvalidAmountException;
 
@@ -68,19 +69,25 @@ public sealed abstract class Account permits CheckingAccount, SavingsAccount {
         this.validateWithdrawal(amount);
 
         if (destination == null) {
-            throw new IllegalArgumentException("Account destination cannot be null");
+            throw new IllegalArgumentException("Account destination " +
+                    "cannot be null");
         }
 
         if (destination.getAccountStatus() == FROZEN) {
-            throw new AccountFrozenException(destination.accountID);
+            throw new AccountFrozenException(destination.accountID,
+                    FrozenOp.TRANSACTION);
         }
         if (destination.getAccountStatus() == CLOSED) {
             throw new AccountClosedException(destination.accountID);
         }
     }
 
-   void withdrawFunds(BigDecimal amount) { this.accountBalance = this.accountBalance.subtract(amount); }
-   void depositFunds(BigDecimal amount) { this.accountBalance = this.accountBalance.add(amount); }
+   void withdrawFunds(BigDecimal amount) {
+        this.accountBalance = this.accountBalance.subtract(amount);
+    }
+   void depositFunds(BigDecimal amount) {
+        this.accountBalance = this.accountBalance.add(amount);
+    }
 
     /**
      * @summary
@@ -93,8 +100,11 @@ public sealed abstract class Account permits CheckingAccount, SavingsAccount {
      */
     protected void validateAccountActiveAndAmount(BigDecimal amount) throws
             AccountFrozenException, AccountClosedException, InvalidAmountException {
-        if (FROZEN == getAccountStatus()) throw new AccountFrozenException(getAccountID());
-        if (CLOSED == getAccountStatus()) throw new AccountClosedException(getAccountID());
-        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) throw new InvalidAmountException(amount);
+        if (FROZEN == getAccountStatus()) throw new AccountFrozenException
+                (getAccountID(), FrozenOp.TRANSACTION);
+        if (CLOSED == getAccountStatus()) throw new AccountClosedException
+                (getAccountID());
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0)
+            throw new InvalidAmountException(amount);
     }
 }
