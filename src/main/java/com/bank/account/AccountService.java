@@ -102,6 +102,8 @@ public class AccountService {
      * @param accountID account id of the requested account tot be closed
      * @throws AccountNotFoundException throws if account isnt found
      * @throws CannotCloseAccountException throws if account cannot be closed
+     * @throws AccountFrozenException throws if account is frozen.
+     * account must be frozen before closing
      */
     public void closeAccount(UUID accountID) throws AccountNotFoundException,
             CannotCloseAccountException, AccountFrozenException {
