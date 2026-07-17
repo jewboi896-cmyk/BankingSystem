@@ -1,8 +1,6 @@
 package com.bank.account;
 
-import com.bank.exception.BankingException;
-import com.bank.exception.InsufficientFundsException;
-import com.bank.exception.WithdrawalLimitExceededException;
+import com.bank.exception.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
@@ -91,7 +89,10 @@ public final class SavingsAccount extends Account {
      * crowd method signature
      */
     @Override
-    public void validateWithdrawal(BigDecimal amount) throws BankingException {
+    public void validateWithdrawal(BigDecimal amount) throws
+            AccountFrozenException, AccountClosedException,
+            InsufficientFundsException, InvalidAmountException,
+            WithdrawalLimitExceededException {
         validateAccountActiveAndAmount(amount);
         rolloverIfNeeded();
         if (withdrawalsThisMonth >= monthlyWithdrawalLimit) {
