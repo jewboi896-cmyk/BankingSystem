@@ -9,6 +9,7 @@ import com.bank.auth.AuthService;
 import com.bank.auth.jwt.JWTService;
 import com.bank.auth.jwt.RequestContext;
 import com.bank.exception.BankingException;
+import com.bank.role.Role;
 import com.bank.user.User;
 import io.javalin.http.Context;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +35,7 @@ public class AuthController {
     public void register(@NotNull Context ctx) throws BankingException {
         RegisterRequest rReq = ctx.bodyAsClass(RegisterRequest.class);
         User user = authService.registerUser(rReq.username(), rReq.firstName(),
-                rReq.lastName(), rReq.middleInitial(), rReq.password(), rReq.role());
+                rReq.lastName(), rReq.middleInitial(), rReq.password(), Role.CUSTOMER);
         ctx.status(201).json(new UserResponse(user.getUserID(),
                 user.getUsername(), user.getRole()));
     }
