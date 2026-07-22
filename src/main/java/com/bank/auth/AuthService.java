@@ -49,6 +49,12 @@ public class AuthService {
      * @throws DuplicateUsernameException throws if same username already exists
      * in db
      */
+
+    // SECURITY: role is NOT validated here — the only caller today is
+    // AuthController.register(), which hardcodes Role.CUSTOMER. If a second
+    // caller is added (e.g. admin-creates-teller), it MUST verify the
+    // requesting caller's JWT role is ADMIN before passing anything
+    // but CUSTOMER.
     public @NotNull User registerUser(String username, String firstName,
                                       String lastName, Character middleInitial,
                              String plainPassword, Role role) throws
