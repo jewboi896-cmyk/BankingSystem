@@ -98,15 +98,16 @@ public class AccountService {
      */
     public void freezeAccount(UUID accountID) throws AccountNotFoundException,
             AccountClosedException {
-        Account account = accountRepository.findAccountByAccountID(accountID)
-                .orElseThrow(() -> new AccountNotFoundException(accountID));
+        synchronized (lockFor(accountID)) {
+            Account account = accountRepository.findAccountByAccountID(accountID)
+                    .orElseThrow(() -> new AccountNotFoundException(accountID));
 
-        if (account.getAccountStatus().equals(AccountStatus.CLOSED)) {
-            throw new AccountClosedException(accountID);
+            if (account.getAccountStatus().equals(AccountStatus.CLOSED)) {
+                throw new AccountClosedException(accountID);
+            }
+            account.setAccountStatus(AccountStatus.FROZEN);
+            accountRepository.saveAccount(account);
         }
-
-        account.setAccountStatus(AccountStatus.FROZEN);
-        accountRepository.saveAccount(account);
     }
     // closes an account
 
@@ -120,22 +121,24 @@ public class AccountService {
      */
     public void closeAccount(UUID accountID) throws AccountNotFoundException,
             CannotCloseAccountException, AccountFrozenException {
-        Account account = accountRepository.findAccountByAccountID(accountID)
-                .orElseThrow(() -> new AccountNotFoundException(accountID));
+        synchronized (lockFor(accountID)) {
+            Account account = accountRepository.findAccountByAccountID(accountID)
+                    .orElseThrow(() -> new AccountNotFoundException(accountID));
 
-        if (account.getAccountStatus().equals(AccountStatus.FROZEN)) {
-            throw new AccountFrozenException(accountID, FrozenOp.CLOSURE);
-        }
+            if (account.getAccountStatus().equals(AccountStatus.FROZEN)) {
+                throw new AccountFrozenException(accountID, FrozenOp.CLOSURE);
+            }
 
-        BigDecimal currentBalance = account.getAccountBalance();
-        // don't allow an account to close if account balance isnt 0
-        if (currentBalance.compareTo(BigDecimal.ZERO) != 0) {
-            throw new CannotCloseAccountException(accountID);
-        }
+            BigDecimal currentBalance = account.getAccountBalance();
+            // don't allow an account to close if account balance isnt 0
+            if (currentBalance.compareTo(BigDecimal.ZERO) != 0) {
+                throw new CannotCloseAccountException(accountID);
+            }
 
-        if (!account.getAccountStatus().equals(AccountStatus.CLOSED)) {
-            account.setAccountStatus(AccountStatus.CLOSED);
-            accountRepository.saveAccount(account);
+            if (!account.getAccountStatus().equals(AccountStatus.CLOSED)) {
+                account.setAccountStatus(AccountStatus.CLOSED);
+                accountRepository.saveAccount(account);
+            }
         }
     }
 
