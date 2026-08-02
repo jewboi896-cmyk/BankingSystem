@@ -20,6 +20,10 @@ public class AuthService {
     private final UserRepository userRepository;
     private static final int MAX_PASSWORD_ATTEMPTS = 3;
     private static final int ACCOUNT_LOCKOUT_MINUTES = 15;
+    private static final String DUMMY_HASH = BCrypt
+            .hashpw("dummy-password-for-timing-parity",
+                    BCrypt.gensalt());
+
     private final Map<String, Integer> failedLoginAttempts = new
             ConcurrentHashMap<>();
     private final Map<String, LocalDateTime> loginLockedUntil = new
@@ -91,6 +95,7 @@ public class AuthService {
 
         Optional<User> found = userRepository.findUserByUsername(username);
         if (found.isEmpty()) {
+            BCrypt.checkpw(plainPassword, DUMMY_HASH); // pay same cost as real user
             recordFailedAttempt(username);  // <-- track even on missing user
             enforceLoginLockout(username);
             throw new UnauthorizedException("Invalid credentials");
