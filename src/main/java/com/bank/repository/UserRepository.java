@@ -13,4 +13,5 @@ public interface UserRepository {
     @NotNull Optional<User> findUserByUsername(String username);
     List<User> findAllUsers();
     void deleteUser(UUID userId);
+    boolean saveUserIfAbsent(User user);
 }

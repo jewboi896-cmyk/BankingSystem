@@ -27,8 +27,13 @@ public class AccountOwnershipGuard {
      * @throws ForbiddenException throws if not authorized
      */
     public Account requireOwnedAccount(Context ctx, UUID accountID)
-            throws AccountNotFoundException, ForbiddenException {
-        Account account = accountService.getAccountByID(accountID);
+            throws ForbiddenException {
+        Account account;
+        try {
+            account = accountService.getAccountByID(accountID);
+        } catch (AccountNotFoundException e) {
+            throw new ForbiddenException("Account does not belong to caller");
+        }
         if (!account.getUserID().equals(RequestContext.userID(ctx))) {
             throw new ForbiddenException("Account does not belong to caller");
         }

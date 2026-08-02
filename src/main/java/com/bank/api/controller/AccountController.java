@@ -8,6 +8,7 @@ import com.bank.api.dto.request.CreateSavingsRequest;
 import com.bank.auth.jwt.RequestContext;
 import com.bank.exception.BankingException;
 import io.javalin.http.Context;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,9 +32,7 @@ public class AccountController {
      */
     public void createChecking(Context ctx) throws BankingException {
         UUID userID = RequestContext.userID(ctx);
-        CreateCheckingRequest cCReq = ctx.bodyAsClass(CreateCheckingRequest.class);
-        Account account = accountService.createCheckingAccount(userID,
-                cCReq.overdraftLimit());
+        Account account = accountService.createCheckingAccount(userID);
         ctx.status(201).json(AccountResponse.fromAccount(account));
     }
 
@@ -46,9 +45,7 @@ public class AccountController {
      */
     public void createSavings(Context ctx) throws BankingException {
         UUID userID = RequestContext.userID(ctx);
-        CreateSavingsRequest csReq = ctx.bodyAsClass(CreateSavingsRequest.class);
-        Account account = accountService.createSavingsAccount(userID,
-                csReq.interestRate(), csReq.withdrawalLimit());
+        Account account = accountService.createSavingsAccount(userID);
         ctx.status(201).json(AccountResponse.fromAccount(account));
     }
 
@@ -59,7 +56,7 @@ public class AccountController {
      * method signature and also because other parts of the codebase will rely
      * on these methods
      */
-    public void getAccount(Context ctx) throws BankingException {
+    public void getAccount(@NotNull Context ctx) throws BankingException {
         UUID accountID = UUID.fromString(ctx.pathParam("id"));
         Account account = guard.requireOwnedAccount(ctx, accountID);
         ctx.json(AccountResponse.fromAccount(account));

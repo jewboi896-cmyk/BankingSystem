@@ -1,5 +1,6 @@
 package com.bank.repository.inMem;
 
+import com.bank.file.FileHelper;
 import com.bank.repository.UserRepository;
 import com.bank.user.User;
 import org.jetbrains.annotations.NotNull;
@@ -65,5 +66,15 @@ public class InMemoryUserRepository implements UserRepository {
             usersByUsername.remove(user.getUsername());
         }
         System.out.println("User does not exist");
+    }
+
+    @Override
+    public synchronized boolean saveUserIfAbsent(@NotNull User user) {
+        if (usersByUsername.containsKey(user.getUsername())) {
+            return false;
+        }
+        usersById.put(user.getUserID(), user);
+        usersByUsername.put(user.getUsername(), user);
+        return true;
     }
 }

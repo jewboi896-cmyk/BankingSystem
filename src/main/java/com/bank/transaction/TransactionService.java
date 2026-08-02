@@ -39,20 +39,23 @@ public class TransactionService {
     public @NotNull Transaction depositFunds(UUID accountId, BigDecimal amount,
                                              String description)
             throws BankingException {
-        Account account = accountService.getAccountByID(accountId);
-        account.validateDeposit(amount);
-        Transaction transaction = new Transaction(DEPOSIT, amount,
-                null, accountId, description);
-        try {
-            accountService.applyDeposit(account, amount);
-        } catch (Exception e) {
-            transaction.setTransactionStatus(FAILED);
+        synchronized (accountService.lockFor(accountId)) {
+            Account account = accountService.getAccountByID(accountId);
+            account.validateDeposit(amount);
+            Transaction transaction = new Transaction(DEPOSIT, amount,
+                    null, accountId, description);
+            try {
+                accountService.applyDeposit(account, amount);
+            } catch (Exception e) {
+                transaction.setTransactionStatus(FAILED);
+                transactionRepository.saveTransaction(transaction);
+                throw new TransactionFailedException("Failed to deposit funds into account: " + account.getAccountID(), e);
+            }
+            transaction.setTransactionStatus(COMPLETED);
             transactionRepository.saveTransaction(transaction);
-            throw new TransactionFailedException("Failed to deposit funds into account: " + account.getAccountID(), e);
+            return transaction;
         }
-        transaction.setTransactionStatus(COMPLETED);
-        transactionRepository.saveTransaction(transaction);
-        return transaction;
+
     }
 
     /*
@@ -66,21 +69,24 @@ public class TransactionService {
     public @NotNull Transaction withdrawFunds(UUID accountID, BigDecimal amount,
                                               String description)
             throws BankingException {
-        Account account = accountService.getAccountByID(accountID);
-
-        account.validateWithdrawal(amount);
-        Transaction transaction = new Transaction(WITHDRAW, amount, accountID,
-                null, description);
-        try {
-            accountService.applyWithdrawal(account, amount);
-        } catch (Exception e) {
-            transaction.setTransactionStatus(FAILED);
+        synchronized (accountService.lockFor(accountID)) {
+            Account account = accountService.getAccountByID(accountID);
+            account.validateWithdrawal(amount);
+            Transaction transaction = new Transaction(WITHDRAW, amount, accountID,
+                    null, description);
+            try {
+                accountService.applyWithdrawal(account, amount);
+            } catch (Exception e) {
+                transaction.setTransactionStatus(FAILED);
+                transactionRepository.saveTransaction(transaction);
+                throw new TransactionFailedException("Failed to withdraw " +
+                        "requested funds from account: " + account.getAccountID(),
+                        e);
+            }
+            transaction.setTransactionStatus(COMPLETED);
             transactionRepository.saveTransaction(transaction);
-            throw new TransactionFailedException("Failed to withdraw requested funds from account: " + account.getAccountID(), e);
+            return transaction;
         }
-        transaction.setTransactionStatus(COMPLETED);
-        transactionRepository.saveTransaction(transaction);
-        return transaction;
     }
     /*
     method to transfer funds from on account to the next
@@ -91,28 +97,40 @@ public class TransactionService {
     the account is a savings account it increments the monthly withdrawal limit for that account.
     it then saves both the account(source and destination) and transaction and returns the transaction
      */
-    public @NotNull Transaction transferFunds(UUID sourceID, UUID destinationID,
+    public @NotNull Transaction transferFunds(@NotNull UUID sourceID, UUID destinationID,
                                               BigDecimal amount,
                                               String description)
             throws BankingException {
-        Account source = accountService.getAccountByID(sourceID);
-        Account destination = accountService.getAccountByID(destinationID);
+        UUID firstId = (sourceID.compareTo(destinationID) <= 0) ? sourceID :
+                destinationID;
+        UUID secondId = (sourceID.compareTo(destinationID) <= 0) ? destinationID :
+                sourceID;
 
-        source.validateTransfer(amount, destination);
-        Transaction transaction = new Transaction(TRANSFER, amount, sourceID,
-                destinationID, description);
-        try {
-            accountService.applyWithdrawal(source, amount);
-            accountService.applyDeposit(destination, amount);
-            transaction.setTransactionStatus(COMPLETED);
-        } catch (Exception e) {
-            transaction.setTransactionStatus(FAILED);
-            transactionRepository.saveTransaction(transaction);
-            throw new TransactionFailedException("Failed to transfer requested funds from " + source.getAccountID() +
-                    " account to " + destination.getAccountID() + " account ", e);
+        synchronized (accountService.lockFor(firstId)) {
+            synchronized (accountService.lockFor(secondId)) {
+                Account source = accountService.getAccountByID(sourceID);
+                Account destination = accountService
+                        .getAccountByID(destinationID);
+
+                source.validateTransfer(amount, destination);
+                Transaction transaction = new Transaction(TRANSFER, amount,
+                        sourceID, destinationID, description);
+                try {
+                    accountService.applyWithdrawal(source, amount);
+                    accountService.applyDeposit(destination, amount);
+                    transaction.setTransactionStatus(COMPLETED);
+                } catch (Exception e) {
+                    transaction.setTransactionStatus(FAILED);
+                    transactionRepository.saveTransaction(transaction);
+                    throw new TransactionFailedException("Failed to transfer " +
+                            "requested funds from " + source.getAccountID() +
+                            " account to " + destination.getAccountID() +
+                            " account ", e);
+                }
+                transactionRepository.saveTransaction(transaction);
+                return transaction;
+            }
         }
-        transactionRepository.saveTransaction(transaction);
-        return transaction;
     }
 
     /*

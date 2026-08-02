@@ -59,4 +59,15 @@ public class JsonUserRepository implements UserRepository {
         }
         fileHelper.writeToFile(usersById);
     }
+
+    @Override
+    public synchronized boolean saveUserIfAbsent(@NotNull User user) {
+        if (usersByUsername.containsKey(user.getUsername())) {
+            return false;
+        }
+        usersById.put(user.getUserID(), user);
+        usersByUsername.put(user.getUsername(), user);
+        fileHelper.writeToFile(usersById);
+        return true;
+    }
 }

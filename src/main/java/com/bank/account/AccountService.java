@@ -9,28 +9,45 @@ import com.bank.exception.AccountFrozenException.FrozenOp;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class AccountService {
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
+    private final ConcurrentHashMap<UUID, Object> accountLocks = new ConcurrentHashMap<>();
+    private static final BigDecimal DEFAULT_OVERDRAFT_LIMIT = BigDecimal.ZERO;
+    private static final BigDecimal DEFAULT_SAVINGS_INTEREST_RATE =
+            new BigDecimal("0.01");
+    private static final int DEFAULT_MONTHLY_WITHDRAWAL_LIMIT = 6;
 
     public AccountService(AccountRepository accountRepository, UserRepository userRepository) {
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
     }
+
+    // this method exists to ensure transaction is synced the whole time
+    /**
+     * @author Derek Homel
+     * @param accountId account id to validate
+     * @return returns a new object if account isnt locked
+     */
+    public Object lockFor(UUID accountId) {
+        return accountLocks.computeIfAbsent(accountId, id -> new Object());
+    }
+
     // create checking account
 
     /**
      * @author Derek Homel
      * @param userID id of the logged on user
-     * @param overdraftLimit overdraft limit of the requested checking account
      * @return returns the requested checking account
      * @throws UserNotFoundException throws if user isnt found
      */
-    public Account createCheckingAccount(UUID userID, BigDecimal overdraftLimit)
+    public Account createCheckingAccount(UUID userID)
             throws UserNotFoundException {
         requireUserExists(userID);
-        CheckingAccount account = new CheckingAccount(userID, overdraftLimit);
+        CheckingAccount account = new CheckingAccount(userID,
+                DEFAULT_OVERDRAFT_LIMIT);
         accountRepository.saveAccount(account);
         return account;
     }
@@ -39,17 +56,13 @@ public class AccountService {
     /**
      * @author Derek Homel
      * @param userID id of the user requesting the savings account creation
-     * @param interestRate interest rate of the account requested
-     * @param withdrawalLimit withdrawal limit for requested savings account
      * @return returns the new savings account
      * @throws UserNotFoundException throws if user isnt found
      */
-    public Account createSavingsAccount(UUID userID, BigDecimal interestRate,
-                                        int withdrawalLimit)
-            throws UserNotFoundException {
+    public Account createSavingsAccount(UUID userID) throws UserNotFoundException {
         requireUserExists(userID);
-        SavingsAccount account = new SavingsAccount(userID, interestRate,
-                withdrawalLimit);
+        SavingsAccount account = new SavingsAccount(userID,
+                DEFAULT_SAVINGS_INTEREST_RATE, DEFAULT_MONTHLY_WITHDRAWAL_LIMIT);
         accountRepository.saveAccount(account);
         return account;
     }

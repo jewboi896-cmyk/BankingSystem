@@ -59,13 +59,12 @@ public class AuthService {
                                       String lastName, Character middleInitial,
                              String plainPassword, Role role) throws
             DuplicateUsernameException {
-        if (userRepository.findUserByUsername(username).isPresent()) {
-            throw new DuplicateUsernameException(username);
-        }
         String hashedPassword = BCrypt.hashpw(plainPassword, BCrypt.gensalt());
         User user = new User(username, firstName, lastName, middleInitial,
                 hashedPassword, role);
-        userRepository.saveUser(user);
+        if (!userRepository.saveUserIfAbsent(user)) {
+            throw new DuplicateUsernameException(username);
+        }
         return user;
     }
     /* method to log in a user
