@@ -57,7 +57,7 @@ public class AccountController {
      * on these methods
      */
     public void getAccount(@NotNull Context ctx) throws BankingException {
-        UUID accountID = UUID.fromString(ctx.pathParam("id"));
+        UUID accountID = ApiUtils.parsePathUUID(ctx, "id");
         Account account = guard.requireOwnedAccount(ctx, accountID);
         ctx.json(AccountResponse.fromAccount(account));
     }

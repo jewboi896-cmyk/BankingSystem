@@ -9,6 +9,7 @@ import com.bank.auth.AuthService;
 import com.bank.auth.jwt.AuthMiddleware;
 import com.bank.auth.jwt.JWTService;
 import com.bank.exception.*;
+import com.bank.factory.GsonFactory;
 import com.bank.repository.AccountRepository;
 import com.bank.repository.RepoFactory;
 import com.bank.repository.TransactionRepository;
@@ -16,6 +17,7 @@ import com.bank.repository.UserRepository;
 import com.bank.transaction.TransactionService;
 import com.bank.user.UserService;
 import io.javalin.Javalin;
+import io.javalin.json.JavalinGson;
 
 public class Main {
     private final static int SECRET_LENGTH = 32;
@@ -51,6 +53,8 @@ public class Main {
 
         // init Javalin server
         Javalin.create(config -> {
+            config.jsonMapper(new JavalinGson(GsonFactory.createGson(),
+                    false));
             // init routes
             RouteConfig.registerRoutes(config, authMiddleware, authController,
                     accountController, transactionController,

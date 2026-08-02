@@ -49,6 +49,11 @@ public class ExceptionMapper {
                 (e, ctx) -> ctx.status(400)
                         .json(new ErrorResponse("invalid_request",
                                 e.getMessage())));
+        // Malformed request body (bad UUID format, invalid JSON structure, etc.)
+        config.routes.exception(com.google.gson.JsonParseException.class,
+                (e, ctx) ->
+                        ctx.status(400).json(new ErrorResponse(
+                                "bad_request", "Malformed request body")));
 
         // Not found → 404
         config.routes.exception(AccountNotFoundException.class,
