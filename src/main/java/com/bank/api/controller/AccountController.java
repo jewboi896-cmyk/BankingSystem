@@ -3,8 +3,6 @@ package com.bank.api.controller;
 import com.bank.account.*;
 import com.bank.api.AccountOwnershipGuard;
 import com.bank.api.dto.response.AccountResponse;
-import com.bank.api.dto.request.CreateCheckingRequest;
-import com.bank.api.dto.request.CreateSavingsRequest;
 import com.bank.auth.jwt.RequestContext;
 import com.bank.exception.BankingException;
 import io.javalin.http.Context;
@@ -12,6 +10,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.UUID;
+
+import static com.bank.api.APIUtils.parsePathUUID;
 
 public class AccountController {
     private final AccountService accountService;
@@ -57,7 +57,7 @@ public class AccountController {
      * on these methods
      */
     public void getAccount(@NotNull Context ctx) throws BankingException {
-        UUID accountID = ApiUtils.parsePathUUID(ctx, "id");
+        UUID accountID = parsePathUUID(ctx, "id");
         Account account = guard.requireOwnedAccount(ctx, accountID);
         ctx.json(AccountResponse.fromAccount(account));
     }
