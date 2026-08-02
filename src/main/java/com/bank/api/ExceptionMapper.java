@@ -45,6 +45,10 @@ public class ExceptionMapper {
                 (e, ctx) ->
                 ctx.status(400).json(new ErrorResponse(
                         "transaction_failed", e.getMessage())));
+        config.routes.exception(InvalidRequestException.class,
+                (e, ctx) -> ctx.status(400)
+                        .json(new ErrorResponse("invalid_request",
+                                e.getMessage())));
 
         // Not found → 404
         config.routes.exception(AccountNotFoundException.class,
