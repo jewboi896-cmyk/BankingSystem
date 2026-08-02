@@ -152,23 +152,6 @@ public class AccountService {
             throw new UserNotFoundException("User not found");
         }
     }
-    // adjusts balance after any type of transaction goes through
-    // caller determines whether balance was added to or reduced
-    // package private so that API handlers cannot directly modify
-
-    /**
-     * @author Derek Homel
-     * @param accountID id of specified account
-     * @param amount amount to be adjusted. BigDecimal to ensure no
-     *              potential rounding errors
-     * @throws AccountNotFoundException -> throws if account isnt found
-     * @deprecated because of the applyWithdrawal() and applyDeposit() methods
-     */
-    void adjustBalance(UUID accountID, BigDecimal amount)  throws AccountNotFoundException {
-        Account account = getAccountByID(accountID);
-        account.setAccountBalance(account.getAccountBalance().add(amount));
-        accountRepository.saveAccount(account);
-    }
 
     // === These next two methods are public so that balance can be adjusted
     // outside of this package ===
