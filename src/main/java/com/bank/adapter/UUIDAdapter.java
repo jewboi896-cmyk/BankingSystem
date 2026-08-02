@@ -36,6 +36,11 @@ public class UUIDAdapter implements JsonSerializer<UUID>,
     public @NotNull UUID deserialize(@NotNull JsonElement json, Type typeOfT,
                                      JsonDeserializationContext context)
             throws JsonParseException {
-        return UUID.fromString(json.getAsString());
+        String rawJson = json.getAsString();
+        try {
+            return UUID.fromString(rawJson);
+        } catch (IllegalArgumentException e) {
+            throw new JsonParseException("Invalid UUID format");
+        }
     }
 }
