@@ -8,7 +8,6 @@ import com.bank.exception.TransactionFailedException;
 import com.bank.exception.TransactionNotFoundException;
 import com.bank.repository.TransactionRepository;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.util.List;

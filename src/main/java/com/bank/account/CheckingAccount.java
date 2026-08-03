@@ -24,9 +24,6 @@ public final class CheckingAccount extends Account {
 
     public @NotNull BigDecimal getOverdraftLimit() { return overdraftLimit; }
 
-    @Deprecated
-    private void setOverdraftLimit(BigDecimal overdraftLimit) { this.overdraftLimit = overdraftLimit; }
-
     /**
      * @author Derek Homel
      * @param amount withdrawn amount to validate

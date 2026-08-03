@@ -4,7 +4,6 @@ import com.bank.account.Account;
 import com.bank.account.AccountService;
 import com.bank.auth.jwt.RequestContext;
 import com.bank.exception.AccountNotFoundException;
-import com.bank.exception.BankingException;
 import com.bank.exception.ForbiddenException;
 import io.javalin.http.Context;
 
@@ -23,7 +22,6 @@ public class AccountOwnershipGuard {
      * @param ctx the context for the request
      * @param accountID the account ID of the specified account
      * @return returns the accountID of the specified account
-     * @throws AccountNotFoundException throws if the account cannot be found
      * @throws ForbiddenException throws if not authorized
      */
     public Account requireOwnedAccount(Context ctx, UUID accountID)
