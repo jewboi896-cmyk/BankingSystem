@@ -14,6 +14,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.UUID;
 
+import static com.bank.api.APIUtils.parsePathUUID;
+
 public class TransactionController {
     private final TransactionService transactionService;
     private final AccountOwnershipGuard guard;
@@ -33,11 +35,10 @@ public class TransactionController {
      * on these methods
      */
     public void deposit(@NotNull Context ctx) throws BankingException {
-        UUID accountID = UUID.fromString(ctx.pathParam("id"));
+        UUID accountID = parsePathUUID(ctx, "id");
         guard.requireOwnedAccount(ctx, accountID);
         TransactionRequest tReq = ctx.bodyAsClass(TransactionRequest.class);
-        Transaction tx = transactionService.depositFunds(accountID,
-                tReq.amount(), tReq.description());
+        Transaction tx = transactionService.depositFunds(accountID, tReq.amount(), tReq.description());
         ctx.status(201).json(toResponse(tx));
     }
 
@@ -50,11 +51,10 @@ public class TransactionController {
      * on these methods
      */
     public void withdraw(@NotNull Context ctx) throws BankingException {
-        UUID accountID = UUID.fromString(ctx.pathParam("id"));
+        UUID accountID =  parsePathUUID(ctx, "id");
         guard.requireOwnedAccount(ctx, accountID);
         TransactionRequest tReq = ctx.bodyAsClass(TransactionRequest.class);
-        Transaction tx = transactionService.withdrawFunds(accountID,
-                tReq.amount(), tReq.description());
+        Transaction tx = transactionService.withdrawFunds(accountID, tReq.amount(), tReq.description());
         ctx.status(201).json(toResponse(tx));
     }
 
@@ -69,8 +69,7 @@ public class TransactionController {
     public void transfer(@NotNull Context ctx) throws BankingException {
         TransferRequest trReq = ctx.bodyAsClass(TransferRequest.class);
         guard.requireOwnedAccount(ctx, trReq.srcID());
-        Transaction tx = transactionService.transferFunds(trReq.srcID(),
-                trReq.destID(), trReq.amount(), trReq.description());
+        Transaction tx = transactionService.transferFunds(trReq.srcID(), trReq.destID(), trReq.amount(), trReq.description());
         ctx.status(201).json(toResponse(tx));
     }
 
@@ -83,7 +82,7 @@ public class TransactionController {
      * on these methods
      */
     public void getHistory(@NotNull Context ctx) throws BankingException {
-        UUID accountID = UUID.fromString(ctx.pathParam("id"));
+        UUID accountID =  parsePathUUID(ctx, "id");
         guard.requireOwnedAccount(ctx, accountID);
         List<Transaction> history = transactionService.getTransactionHistoryForAccount(accountID);
         ctx.json(history.stream().map(this::toResponse).toList());
@@ -96,8 +95,7 @@ public class TransactionController {
      * @return returns a switch on the different transaction types:
      * DEPOSIT, WITHDRAW, FEE, and TRANSFER
      */
-    private @NotNull TransactionResponse toResponse(
-            @NotNull Transaction transaction) {
+    private @NotNull TransactionResponse toResponse(@NotNull Transaction transaction) {
         return switch (transaction.getTransactionType()) {
             case TransactionType.DEPOSIT -> new TransactionResponse(
                     transaction.getTransactionId(),
