@@ -37,8 +37,7 @@ public final class CheckingAccount extends Account {
      * equal to zero
      */
     @Override
-    public void validateWithdrawal(BigDecimal amount) throws
-            AccountFrozenException, AccountClosedException,
+    public void validateWithdrawal(BigDecimal amount) throws AccountFrozenException, AccountClosedException,
             InsufficientFundsException, InvalidAmountException {
         validateAccountActiveAndAmount(amount);
         BigDecimal balance = getAccountBalance();

@@ -14,8 +14,7 @@ public class Transaction {
     private final LocalDateTime timeCreated;
     private String transactionDescription;
 
-    public Transaction(TransactionType type, BigDecimal amount,
-                       UUID sourceAccountId, UUID destinationAccountId,
+    public Transaction(TransactionType type, BigDecimal amount, UUID sourceAccountId, UUID destinationAccountId,
                        String transactionDescription) {
         transactionId = UUID.randomUUID();
         transactionType = type;

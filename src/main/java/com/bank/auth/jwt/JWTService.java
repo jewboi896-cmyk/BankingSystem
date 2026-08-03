@@ -25,14 +25,9 @@ public class JWTService {
      * @return returns a signed JWT token that expires after 15 minutes
      */
     public String generateToken(@NotNull User user) {
-        return JWT.create()
-                .withSubject(user.getUserID().toString())
-                .withClaim("role", user.getRole().name())
-                .withClaim("username", user.getUsername())
-                .withIssuedAt(Instant.now())
-                .withExpiresAt(Instant.now().plus(15,
-                        ChronoUnit.MINUTES))
-                .sign(Algorithm.HMAC256(secret));
+        return JWT.create().withSubject(user.getUserID().toString()).withClaim("role", user.getRole().name())
+                .withClaim("username", user.getUsername()).withIssuedAt(Instant.now()).withExpiresAt(Instant.now()
+                        .plus(15, ChronoUnit.MINUTES)).sign(Algorithm.HMAC256(secret));
     }
 
     /**

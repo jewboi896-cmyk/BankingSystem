@@ -15,8 +15,7 @@ public class User {
     private Role role;
     private final LocalDateTime createdAt;
 
-    public User(String username, String firstName, String lastName,
-                Character middleInitial, String passwordHash, Role role) {
+    public User(String username, String firstName, String lastName, Character middleInitial, String passwordHash, Role role) {
         this.userID = UUID.randomUUID();
         this.username = username;
         this.firstName = firstName;

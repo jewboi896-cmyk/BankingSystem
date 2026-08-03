@@ -12,7 +12,6 @@ public class HealthController {
      * @param ctx the context for the request
      */
     public void health(@NotNull Context ctx) {
-        ctx.json(Map.of("status", "ok",
-                "timestamp", LocalDateTime.now()));
+        ctx.json(Map.of("status", "ok", "timestamp", LocalDateTime.now()));
     }
 }

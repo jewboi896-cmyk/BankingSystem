@@ -20,8 +20,7 @@ public class TransactionController {
     private final TransactionService transactionService;
     private final AccountOwnershipGuard guard;
 
-    public TransactionController(TransactionService transactionService,
-                                 AccountOwnershipGuard guard) {
+    public TransactionController(TransactionService transactionService, AccountOwnershipGuard guard) {
         this.transactionService = transactionService;
         this.guard = guard;
     }
@@ -94,6 +93,7 @@ public class TransactionController {
      * @param transaction the transaction to be responded to
      * @return returns a switch on the different transaction types:
      * DEPOSIT, WITHDRAW, FEE, and TRANSFER
+     the compiler will fail to compile if i add investments and forget to update this switch
      */
     private @NotNull TransactionResponse toResponse(@NotNull Transaction transaction) {
         return switch (transaction.getTransactionType()) {

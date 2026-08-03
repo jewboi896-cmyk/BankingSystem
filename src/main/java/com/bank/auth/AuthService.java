@@ -20,14 +20,10 @@ public class AuthService {
     private final UserRepository userRepository;
     private static final int MAX_PASSWORD_ATTEMPTS = 3;
     private static final int ACCOUNT_LOCKOUT_MINUTES = 15;
-    private static final String DUMMY_HASH = BCrypt
-            .hashpw("dummy-password-for-timing-parity",
-                    BCrypt.gensalt());
+    private static final String DUMMY_HASH = BCrypt.hashpw("dummy-password-for-timing-parity", BCrypt.gensalt());
 
-    private final Map<String, Integer> failedLoginAttempts = new
-            ConcurrentHashMap<>();
-    private final Map<String, LocalDateTime> loginLockedUntil = new
-            ConcurrentHashMap<>();
+    private final Map<String, Integer> failedLoginAttempts = new ConcurrentHashMap<>();
+    private final Map<String, LocalDateTime> loginLockedUntil = new ConcurrentHashMap<>();
 
     public AuthService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -59,13 +55,10 @@ public class AuthService {
     // caller is added (e.g. admin-creates-teller), it MUST verify the
     // requesting caller's JWT role is ADMIN before passing anything
     // but CUSTOMER.
-    public @NotNull User registerUser(String username, String firstName,
-                                      String lastName, Character middleInitial,
-                             String plainPassword, Role role) throws
-            DuplicateUsernameException {
+    public @NotNull User registerUser(String username, String firstName, String lastName, Character middleInitial,
+                             String plainPassword, Role role) throws DuplicateUsernameException {
         String hashedPassword = BCrypt.hashpw(plainPassword, BCrypt.gensalt());
-        User user = new User(username, firstName, lastName, middleInitial,
-                hashedPassword, role);
+        User user = new User(username, firstName, lastName, middleInitial, hashedPassword, role);
         if (!userRepository.saveUserIfAbsent(user)) {
             throw new DuplicateUsernameException(username);
         }
@@ -89,8 +82,8 @@ public class AuthService {
      * @throws AccountLockedException throws if the account being logged into is
      * locked
      */
-    public @NotNull User login(String username, String plainPassword) throws
-            UnauthorizedException, AccountLockedException {
+    public @NotNull User login(String username, String plainPassword) throws UnauthorizedException,
+            AccountLockedException {
         enforceLoginLockout(username);
 
         Optional<User> found = userRepository.findUserByUsername(username);
@@ -123,13 +116,10 @@ public class AuthService {
      * @throws UnauthorizedException throws if user is unauthorized
      * @throws AccountLockedException throws if account is locked
      */
-    public void changePassword(UUID userID, String currPassword,
-                                        String newPassword)
-            throws UserNotFoundException, UnauthorizedException,
-            AccountLockedException {
+    public void changePassword(UUID userID, String currPassword, String newPassword) throws UserNotFoundException,
+            UnauthorizedException, AccountLockedException {
 
-        User user = userRepository.findUserById(userID)
-                .orElseThrow(() -> new UserNotFoundException(userID));
+        User user = userRepository.findUserById(userID).orElseThrow(() -> new UserNotFoundException(userID));
 
         enforceLoginLockout(user.getUsername());
 
@@ -153,8 +143,7 @@ public class AuthService {
         // atomic to ensure read-modify-write is one op
         int attempts = failedLoginAttempts.merge(username, 1, Integer::sum);
         if (attempts >= MAX_PASSWORD_ATTEMPTS) {
-            loginLockedUntil.put(username, LocalDateTime.now().plusMinutes(
-                    ACCOUNT_LOCKOUT_MINUTES));
+            loginLockedUntil.put(username, LocalDateTime.now().plusMinutes(ACCOUNT_LOCKOUT_MINUTES));
             failedLoginAttempts.remove(username);
         }
     }
@@ -175,14 +164,13 @@ public class AuthService {
      * @param username username to enforce the login lockout
      * @throws AccountLockedException throws if account is locked
      */
-    private void enforceLoginLockout(String username) throws
-            AccountLockedException {
+    private void enforceLoginLockout(String username) throws AccountLockedException {
         if (loginLockedUntil.containsKey(username)) {
             // if the date is before what is in the map, track the mins left
             // and throw a AccountLockedException until the time is up
             if (LocalDateTime.now().isBefore(loginLockedUntil.get(username))) {
-                long minutesLeft = java.time.Duration.between(LocalDateTime.now(),
-                        loginLockedUntil.get(username)).toMinutes() + 1;
+                long minutesLeft = java.time.Duration.between(LocalDateTime.now(), loginLockedUntil.get(username))
+                        .toMinutes() + 1;
                 throw new AccountLockedException((int) minutesLeft);
             }
             loginLockedUntil.remove(username);  // expired, clean up

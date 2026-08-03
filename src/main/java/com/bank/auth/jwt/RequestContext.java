@@ -15,8 +15,7 @@ public class RequestContext {
      */
     public static @NotNull UUID userID(@NotNull Context ctx) {
         UUID uid = ctx.attribute("userID");
-        if (uid == null) throw new IllegalStateException(
-                "No userID in context — middleware not applied?");
+        if (uid == null) throw new IllegalStateException("No userID in context — middleware not applied?");
         return uid;
     }
 
@@ -28,8 +27,7 @@ public class RequestContext {
      */
     public static @NotNull Role role(@NotNull Context ctx) {
         Role role = ctx.attribute("role");
-        if (role == null) throw new IllegalStateException(
-                "No role in context — middleware not applied?");
+        if (role == null) throw new IllegalStateException("No role in context — middleware not applied?");
         return role;
     }
 }

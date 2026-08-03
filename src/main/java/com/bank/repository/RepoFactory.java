@@ -15,8 +15,8 @@ import java.util.UUID;
 
 public class RepoFactory {
     public static @NotNull UserRepository createUserRepo() {
-        FileHelper<User> userHelper = new FileHelper<>("data/users.json",
-                new TypeToken<Map<UUID, User>>(){}.getType());
+        FileHelper<User> userHelper = new FileHelper<>("data/users.json", new TypeToken<Map<UUID, User>>(){}
+                .getType());
         return new JsonUserRepository(userHelper);
     }
 

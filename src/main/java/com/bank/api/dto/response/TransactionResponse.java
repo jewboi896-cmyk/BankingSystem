@@ -7,11 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record TransactionResponse(UUID transactionId,
-                                  TransactionType transactionType,
-                                  BigDecimal amount,
+public record TransactionResponse(UUID transactionId, TransactionType transactionType, BigDecimal amount,
                                   UUID sourceAccountId,        // null for deposits
                                   UUID destinationAccountId,   // null for withdrawals
-                                  TransactionStatus transactionStatus,
-                                  LocalDateTime timeCreated,
-                                  String description) {}
+                                  TransactionStatus transactionStatus, LocalDateTime timeCreated, String description) {}

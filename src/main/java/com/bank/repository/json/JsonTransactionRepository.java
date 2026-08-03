@@ -19,10 +19,8 @@ public class JsonTransactionRepository implements TransactionRepository {
 
     @Override
     public List<Transaction> findTransactionByAccountId(UUID accountId) {
-        return transactions.values().stream()
-                .filter(t -> accountId.equals(t.getSourceAccountId())
-                        || accountId.equals(t.getDestinationAccountId()))
-                .collect(Collectors.toList());
+        return transactions.values().stream().filter(t -> accountId.equals(t.getSourceAccountId())
+                        || accountId.equals(t.getDestinationAccountId())).collect(Collectors.toList());
     }
 
     @Override

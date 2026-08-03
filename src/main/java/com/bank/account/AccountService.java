@@ -43,11 +43,9 @@ public class AccountService {
      * @return returns the requested checking account
      * @throws UserNotFoundException throws if user isnt found
      */
-    public Account createCheckingAccount(UUID userID)
-            throws UserNotFoundException {
+    public Account createCheckingAccount(UUID userID) throws UserNotFoundException {
         requireUserExists(userID);
-        CheckingAccount account = new CheckingAccount(userID,
-                DEFAULT_OVERDRAFT_LIMIT);
+        CheckingAccount account = new CheckingAccount(userID, DEFAULT_OVERDRAFT_LIMIT);
         accountRepository.saveAccount(account);
         return account;
     }
@@ -61,8 +59,8 @@ public class AccountService {
      */
     public Account createSavingsAccount(UUID userID) throws UserNotFoundException {
         requireUserExists(userID);
-        SavingsAccount account = new SavingsAccount(userID,
-                DEFAULT_SAVINGS_INTEREST_RATE, DEFAULT_MONTHLY_WITHDRAWAL_LIMIT);
+        SavingsAccount account = new SavingsAccount(userID, DEFAULT_SAVINGS_INTEREST_RATE,
+                DEFAULT_MONTHLY_WITHDRAWAL_LIMIT);
         accountRepository.saveAccount(account);
         return account;
     }
@@ -96,11 +94,10 @@ public class AccountService {
      * @throws AccountNotFoundException throws if specified account isnt found
      * @throws AccountClosedException throws if specified account is closed
      */
-    public void freezeAccount(UUID accountID) throws AccountNotFoundException,
-            AccountClosedException {
+    public void freezeAccount(UUID accountID) throws AccountNotFoundException, AccountClosedException {
         synchronized (lockFor(accountID)) {
-            Account account = accountRepository.findAccountByAccountID(accountID)
-                    .orElseThrow(() -> new AccountNotFoundException(accountID));
+            Account account = accountRepository.findAccountByAccountID(accountID).orElseThrow(() ->
+                    new AccountNotFoundException(accountID));
 
             if (account.getAccountStatus().equals(AccountStatus.CLOSED)) {
                 throw new AccountClosedException(accountID);
@@ -119,11 +116,11 @@ public class AccountService {
      * @throws AccountFrozenException throws if account is frozen.
      * account must be frozen before closing
      */
-    public void closeAccount(UUID accountID) throws AccountNotFoundException,
-            CannotCloseAccountException, AccountFrozenException {
+    public void closeAccount(UUID accountID) throws AccountNotFoundException, CannotCloseAccountException,
+            AccountFrozenException {
         synchronized (lockFor(accountID)) {
-            Account account = accountRepository.findAccountByAccountID(accountID)
-                    .orElseThrow(() -> new AccountNotFoundException(accountID));
+            Account account = accountRepository.findAccountByAccountID(accountID).orElseThrow(() ->
+                    new AccountNotFoundException(accountID));
 
             if (account.getAccountStatus().equals(AccountStatus.FROZEN)) {
                 throw new AccountFrozenException(accountID, FrozenOp.CLOSURE);

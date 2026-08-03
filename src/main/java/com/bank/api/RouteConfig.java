@@ -17,12 +17,9 @@ public class RouteConfig {
      * @param healthC the HealthController object
      * @param uCont the UserController object
      */
-    public static void registerRoutes(@NotNull JavalinConfig config,
-                                      AuthMiddleware auth,
-                                      @NotNull AuthController authC,
-                                      @NotNull AccountController accountC,
-                                      @NotNull TransactionController txC,
-                                      @NotNull HealthController healthC,
+    public static void registerRoutes(@NotNull JavalinConfig config, AuthMiddleware auth,
+                                      @NotNull AuthController authC, @NotNull AccountController accountC,
+                                      @NotNull TransactionController txC, @NotNull HealthController healthC,
                                       @NotNull UserController uCont) {
         // Public
         config.routes.post("/api/auth/register", authC::register);

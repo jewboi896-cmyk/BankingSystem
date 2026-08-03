@@ -51,8 +51,8 @@ public sealed abstract class Account permits CheckingAccount, SavingsAccount {
      * @throws InvalidAmountException throws when amount is less than or equal to
      * zero
      */
-    public void validateDeposit(BigDecimal amount) throws AccountFrozenException,
-            AccountClosedException, InvalidAmountException {
+    public void validateDeposit(BigDecimal amount) throws AccountFrozenException, AccountClosedException,
+            InvalidAmountException {
         validateAccountActiveAndAmount(amount);
     }
 
@@ -64,18 +64,15 @@ public sealed abstract class Account permits CheckingAccount, SavingsAccount {
      * @throws IllegalArgumentException throws if arguments are not recognized
      * @throws BankingException needed because validateWithdrawal throws this
      */
-    public void validateTransfer(BigDecimal amount, Account destination) throws
-            IllegalArgumentException, BankingException {
+    public void validateTransfer(BigDecimal amount, Account destination) throws IllegalArgumentException, BankingException {
         this.validateWithdrawal(amount);
 
         if (destination == null) {
-            throw new IllegalArgumentException("Account destination " +
-                    "cannot be null");
+            throw new IllegalArgumentException("Account destination cannot be null");
         }
 
         if (destination.getAccountStatus() == FROZEN) {
-            throw new AccountFrozenException(destination.accountID,
-                    FrozenOp.TRANSACTION);
+            throw new AccountFrozenException(destination.accountID, FrozenOp.TRANSACTION);
         }
         if (destination.getAccountStatus() == CLOSED) {
             throw new AccountClosedException(destination.accountID);

@@ -34,10 +34,9 @@ public class AuthController {
      */
     public void register(@NotNull Context ctx) throws BankingException {
         RegisterRequest rReq = ctx.bodyAsClass(RegisterRequest.class);
-        User user = authService.registerUser(rReq.username(), rReq.firstName(),
-                rReq.lastName(), rReq.middleInitial(), rReq.password(), Role.CUSTOMER);
-        ctx.status(201).json(new UserResponse(user.getUserID(),
-                user.getUsername(), user.getRole()));
+        User user = authService.registerUser(rReq.username(), rReq.firstName(), rReq.lastName(), rReq.middleInitial(),
+                rReq.password(), Role.CUSTOMER);
+        ctx.status(201).json(new UserResponse(user.getUserID(), user.getUsername(), user.getRole()));
     }
 
     /**
@@ -52,8 +51,7 @@ public class AuthController {
         User user = authService.login(lReq.username(), lReq.password());
         String token = jwtService.generateToken(user);
         final int expiryTimeInSeconds = 900;
-        ctx.json(new LoginResponse(token, user.getUserID(),
-                user.getUsername(), user.getRole(), expiryTimeInSeconds));
+        ctx.json(new LoginResponse(token, user.getUserID(), user.getUsername(), user.getRole(), expiryTimeInSeconds));
     }
 
     /**
@@ -66,8 +64,7 @@ public class AuthController {
     public void changePassword(Context ctx) throws BankingException {
         UUID userID = RequestContext.userID(ctx);
         ChangePasswordRequest cPReq = ctx.bodyAsClass(ChangePasswordRequest.class);
-        authService.changePassword(userID, cPReq.currentPassword(),
-                cPReq.newPassword());
+        authService.changePassword(userID, cPReq.currentPassword(), cPReq.newPassword());
         // 204 -> success, no content
         ctx.status(204);
     }

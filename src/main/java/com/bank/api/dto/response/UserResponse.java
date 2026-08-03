@@ -17,7 +17,6 @@ public record UserResponse(UUID userID, String username, Role role) {
      */
     @Contract("_ -> new")
     public static @NotNull UserResponse fromUser(@NotNull User user) {
-        return new UserResponse(user.getUserID(), user.getUsername(),
-                user.getRole());
+        return new UserResponse(user.getUserID(), user.getUsername(), user.getRole());
     }
 }

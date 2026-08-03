@@ -7,8 +7,7 @@ import com.google.gson.*;
 import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Type;
 
-public class AccountAdapter implements JsonSerializer<Account>,
-        JsonDeserializer<Account> {
+public class AccountAdapter implements JsonSerializer<Account>, JsonDeserializer<Account> {
 
     private static final String TYPE_DISCRIMINATOR = "_type";
 
@@ -21,10 +20,8 @@ public class AccountAdapter implements JsonSerializer<Account>,
      * @return returns the serialized object
      */
     @Override
-    public @NotNull JsonElement serialize(Account src, Type typeOfSrc,
-                                          @NotNull JsonSerializationContext context) {
-        JsonObject object = context.serialize(src, src.getClass())
-                .getAsJsonObject();
+    public @NotNull JsonElement serialize(Account src, Type typeOfSrc, @NotNull JsonSerializationContext context) {
+        JsonObject object = context.serialize(src, src.getClass()).getAsJsonObject();
         object.addProperty(TYPE_DISCRIMINATOR, src.getAccountType().name());
         return object;
     }
@@ -40,8 +37,7 @@ public class AccountAdapter implements JsonSerializer<Account>,
      * @throws JsonParseException throws when a json string cannot be parsed
      */
     @Override
-    public @NotNull Account deserialize(@NotNull JsonElement json, Type typeOfT,
-                                        JsonDeserializationContext context)
+    public @NotNull Account deserialize(@NotNull JsonElement json, Type typeOfT, JsonDeserializationContext context)
             throws JsonParseException {
         JsonObject object = json.getAsJsonObject();
         String type = object.get(TYPE_DISCRIMINATOR).getAsString();
@@ -49,12 +45,9 @@ public class AccountAdapter implements JsonSerializer<Account>,
         Account class is abstract:
         note to add investment account here once implemented */
         return switch (type) {
-            case "CHECKING" -> context.deserialize(object,
-                    CheckingAccount.class);
-            case "SAVINGS"  -> context.deserialize(object,
-                    SavingsAccount.class);
-            default -> throw new JsonParseException("Unknown account type: " +
-                    type);
+            case "CHECKING" -> context.deserialize(object, CheckingAccount.class);
+            case "SAVINGS"  -> context.deserialize(object, SavingsAccount.class);
+            default -> throw new JsonParseException("Unknown account type: " + type);
         };
     }
 }

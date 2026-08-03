@@ -6,8 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Type;
 import java.util.UUID;
 
-public class UUIDAdapter implements JsonSerializer<UUID>,
-        JsonDeserializer<UUID> {
+public class UUIDAdapter implements JsonSerializer<UUID>, JsonDeserializer<UUID> {
 
     /**
      * @summary
@@ -18,8 +17,7 @@ public class UUIDAdapter implements JsonSerializer<UUID>,
      * @return returns a JsonPrimitive of the UUID as a string
      */
     @Override
-    public @NotNull JsonElement serialize(@NotNull UUID src, Type typeOfSrc,
-                                          JsonSerializationContext context) {
+    public @NotNull JsonElement serialize(@NotNull UUID src, Type typeOfSrc, JsonSerializationContext context) {
         return new JsonPrimitive(src.toString());
     }
 
@@ -33,8 +31,7 @@ public class UUIDAdapter implements JsonSerializer<UUID>,
      * @throws JsonParseException throws when json cannot be parsed
      */
     @Override
-    public @NotNull UUID deserialize(@NotNull JsonElement json, Type typeOfT,
-                                     JsonDeserializationContext context)
+    public @NotNull UUID deserialize(@NotNull JsonElement json, Type typeOfT, JsonDeserializationContext context)
             throws JsonParseException {
         String rawJson = json.getAsString();
         try {

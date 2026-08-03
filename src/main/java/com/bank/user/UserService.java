@@ -20,15 +20,11 @@ public class UserService {
     }
 
 
-    public @NotNull User getUserByUsername(String username)
-            throws UserNotFoundException {
-        return userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(username));
+    public @NotNull User getUserByUsername(String username) throws UserNotFoundException {
+        return userRepository.findUserByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
     }
     // role not updatable: updates for admins only
-    public @NotNull User updateUserProfile(UUID userId, String firstName,
-                                           String lastName,
-                                           Character middleInitial)
+    public @NotNull User updateUserProfile(UUID userId, String firstName, String lastName, Character middleInitial)
             throws UserNotFoundException {
         User user = requireUserExists(userId);
         // only sets a param if value is not null at last check
@@ -43,9 +39,7 @@ public class UserService {
         return userRepository.findAllUsers();
     }
 
-    private @NotNull User requireUserExists(UUID userId)
-            throws UserNotFoundException {
-        return userRepository.findUserById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+    private @NotNull User requireUserExists(UUID userId) throws UserNotFoundException {
+        return userRepository.findUserById(userId).orElseThrow(() -> new UserNotFoundException(userId));
     }
 }

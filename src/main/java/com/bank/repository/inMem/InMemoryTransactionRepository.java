@@ -39,8 +39,7 @@ public class InMemoryTransactionRepository implements TransactionRepository {
      */
     @Override
     public List<Transaction> findTransactionByAccountId(UUID accountId) {
-        return transactions.values().stream().
-                filter(t -> accountId.equals(t.getSourceAccountId())
+        return transactions.values().stream().filter(t -> accountId.equals(t.getSourceAccountId())
                 || accountId.equals(t.getDestinationAccountId())).toList();
     }
 

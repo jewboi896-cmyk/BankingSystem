@@ -39,9 +39,7 @@ public class InMemoryAccountRepository implements AccountRepository {
      */
     @Override
     public List<Account> findAccountByUserID(UUID userID) {
-        return accounts.values().stream()
-                .filter(account -> account.getUserID().equals(userID))
-                .collect(Collectors.toList());
+        return accounts.values().stream().filter(account -> account.getUserID().equals(userID)).collect(Collectors.toList());
     }
 
     /**

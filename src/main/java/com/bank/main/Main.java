@@ -24,8 +24,7 @@ public class Main {
     public static void main(String[] args) {
         String secret = System.getenv("BANK_JWT_SECRET");
         if ((secret == null) || (secret.length() < SECRET_LENGTH)) {
-            System.err.println("FATAL: BANK_JWT_SECRET environment variable must be set " +
-                    "and at least 32 characters long.");
+            System.err.println("FATAL: BANK_JWT_SECRET environment variable must be set and at least 32 characters long.");
             System.exit(1);
         }
         // init in mem repos
@@ -53,11 +52,9 @@ public class Main {
 
         // init Javalin server
         Javalin.create(config -> {
-            config.jsonMapper(new JavalinGson(GsonFactory.createGson(),
-                    false));
+            config.jsonMapper(new JavalinGson(GsonFactory.createGson(), false));
             // init routes
-            RouteConfig.registerRoutes(config, authMiddleware, authController,
-                    accountController, transactionController,
+            RouteConfig.registerRoutes(config, authMiddleware, authController, accountController, transactionController,
                     healthController, userController);
 
             // init global exception handler

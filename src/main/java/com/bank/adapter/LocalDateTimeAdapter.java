@@ -6,11 +6,9 @@ import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class LocalDateTimeAdapter implements JsonSerializer<LocalDateTime>,
-        JsonDeserializer<LocalDateTime> {
+public class LocalDateTimeAdapter implements JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
     // sets formatter to use local date time no matter location
-    private static final DateTimeFormatter FORMATTER =
-            DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     /**
      * @summary
@@ -21,9 +19,7 @@ public class LocalDateTimeAdapter implements JsonSerializer<LocalDateTime>,
      * @return returns a JsonPrimitive of a DateTimeFormater as a string
      */
     @Override
-    public @NotNull JsonElement serialize(@NotNull LocalDateTime src,
-                                          Type typeOfSrc,
-                                          JsonSerializationContext context) {
+    public @NotNull JsonElement serialize(@NotNull LocalDateTime src, Type typeOfSrc, JsonSerializationContext context) {
         return new JsonPrimitive(src.format(FORMATTER));
     }
 
@@ -38,9 +34,7 @@ public class LocalDateTimeAdapter implements JsonSerializer<LocalDateTime>,
      * @throws JsonParseException throws if json cannot be parsed
      */
     @Override
-    public @NotNull LocalDateTime deserialize(@NotNull JsonElement json,
-                                              Type typeOfT,
-                                              JsonDeserializationContext context)
+    public @NotNull LocalDateTime deserialize(@NotNull JsonElement json, Type typeOfT, JsonDeserializationContext context)
             throws JsonParseException {
         return LocalDateTime.parse(json.getAsString(), FORMATTER);
     }

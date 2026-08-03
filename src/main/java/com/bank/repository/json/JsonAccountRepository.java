@@ -47,9 +47,7 @@ public class JsonAccountRepository implements AccountRepository {
      */
     @Override
     public List<Account> findAccountByUserID(UUID userId) {
-        return accounts.values().stream()
-                .filter(a -> a.getUserID().equals(userId))
-                .collect(Collectors.toList());
+        return accounts.values().stream().filter(a -> a.getUserID().equals(userId)).collect(Collectors.toList());
     }
 
     /**

@@ -14,10 +14,8 @@ public class AccountFrozenException extends BankingException {
         @Contract(pure = true)
          private @NotNull String describe() {
             return switch (this) {
-                case CLOSURE -> "Account must be unfrozen before it can be " +
-                        "closed";
-                case TRANSACTION -> "Account must be unfrozen before any " +
-                        "transactions are allowed to happen";
+                case CLOSURE -> "Account must be unfrozen before it can be closed";
+                case TRANSACTION -> "Account must be unfrozen before any transactions are allowed to happen";
             };
         }
     }

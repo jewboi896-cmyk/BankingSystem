@@ -14,16 +14,14 @@ public final class SavingsAccount extends Account {
     private final int monthlyWithdrawalLimit;
     private int withdrawalsThisMonth;
     private YearMonth withdrawalPeriod;
-    private transient Clock clock; // transient so gson doesnt serialize
+    private transient Clock clock; // transient so Gson doesnt serialize
 
-    public SavingsAccount(UUID userID, BigDecimal interestRate,
-                          int monthlyWithdrawalLimit) {
+    public SavingsAccount(UUID userID, BigDecimal interestRate, int monthlyWithdrawalLimit) {
         this(userID, interestRate, monthlyWithdrawalLimit,
                 Clock.systemDefaultZone());
     }
 
-    SavingsAccount(UUID userID, BigDecimal interestRate, int
-                           monthlyWithdrawalLimit, Clock clock) {
+    SavingsAccount(UUID userID, BigDecimal interestRate, int monthlyWithdrawalLimit, Clock clock) {
         super(userID);
         this.interestRate = interestRate;
         this.monthlyWithdrawalLimit = monthlyWithdrawalLimit;
@@ -89,10 +87,8 @@ public final class SavingsAccount extends Account {
      * crowd method signature
      */
     @Override
-    public void validateWithdrawal(BigDecimal amount) throws
-            AccountFrozenException, AccountClosedException,
-            InsufficientFundsException, InvalidAmountException,
-            WithdrawalLimitExceededException {
+    public void validateWithdrawal(BigDecimal amount) throws AccountFrozenException, AccountClosedException,
+            InsufficientFundsException, InvalidAmountException, WithdrawalLimitExceededException {
         validateAccountActiveAndAmount(amount);
         rolloverIfNeeded();
         if (withdrawalsThisMonth >= monthlyWithdrawalLimit) {
