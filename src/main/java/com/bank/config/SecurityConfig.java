@@ -53,6 +53,7 @@ public class SecurityConfig {
     private @NotNull JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
         authoritiesConverter.setAuthorityPrefix("ROLE_");
+        // assumes a single-string claim
         authoritiesConverter.setAuthoritiesClaimName("role");
 
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
