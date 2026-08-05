@@ -1,6 +1,6 @@
 package com.bank.file;
 
-import com.bank.factory.GsonFactory;
+import com.bank.config.GsonFactory;
 import com.google.gson.Gson;
 import org.jetbrains.annotations.NotNull;
 
