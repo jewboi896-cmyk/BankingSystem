@@ -9,6 +9,7 @@ import com.bank.role.Role;
 import com.bank.user.User;
 import org.jetbrains.annotations.NotNull;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -16,6 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Service
 public class AuthService {
     private final UserRepository userRepository;
     private static final int MAX_PASSWORD_ATTEMPTS = 3;

@@ -8,6 +8,7 @@ import com.bank.exception.TransactionFailedException;
 import com.bank.exception.TransactionNotFoundException;
 import com.bank.repository.TransactionRepository;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -17,6 +18,7 @@ import static com.bank.transaction.TransactionStatus.COMPLETED;
 import static com.bank.transaction.TransactionStatus.FAILED;
 import static com.bank.transaction.TransactionType.*;
 
+@Service
 public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final AccountService accountService;

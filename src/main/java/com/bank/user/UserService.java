@@ -3,10 +3,12 @@ package com.bank.user;
 import com.bank.exception.UserNotFoundException;
 import com.bank.repository.UserRepository;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Service
 public class UserService {
     private final UserRepository userRepository;
 
